@@ -1,0 +1,28 @@
+*.icon-white {color: white}
+*.icon-silver {color: silver}
+*.icon-success {color: green}
+*.icon-dark {color: darkgray}
+*.icon-blue {color: blue}
+*.icon-danger {color: red}
+*.icon-warning {color: yellow}
+
+@media screen and (max-width: 768px) {
+    /* small screen */
+    div.full-details {display: none}
+    div.less-details {display: block}
+    span.btn-text {display: none}
+
+}
+
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+    /* medium screen */
+    div.full-details {display: block}
+    div.less-details {display: none}
+
+}
+
+@media screen and (min-width: 1024px) {
+    /* max screen */
+    div.less-details {display: none}
+
+}
