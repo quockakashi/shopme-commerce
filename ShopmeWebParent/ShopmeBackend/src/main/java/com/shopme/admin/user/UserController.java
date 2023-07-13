@@ -86,7 +86,7 @@ public class UserController {
     }
 
     @PostMapping("/users/save")
-    public String saveUser(User user, RedirectAttributes redirectAttributes, @RequestParam(name = "image") MultipartFile multipartFile) throws IOException {
+    public String saveUser(User user, RedirectAttributes redirectAttributes, @RequestParam(name = "image") MultipartFile multipartFile, String photo) throws IOException {
         User savedUser = null;
         if(multipartFile != null) {
             String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
@@ -95,7 +95,9 @@ public class UserController {
                 savedUser = service.save(user);
                 FileUploadUtil.saveFile("user-photos/" + user.getId(), fileName, multipartFile);
             } else {
-                user.setPhoto(null);
+                if(photo != null) {
+                    user.setPhoto(photo);
+                }
                 savedUser = service.save(user);
             }
         }
@@ -175,5 +177,6 @@ public class UserController {
         }
         exporter.export(usersList, response);
     }
+
 
 }

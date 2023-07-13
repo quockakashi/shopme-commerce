@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+                xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="menu(fieldActive)">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/}">
+                <img th:src="@{/images/logo-no-background.png}" width="100">
+            </a>
+
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse"
+                    data-bs-target="#navbarMain">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse ms-2 ms-lg-0" id="navbarMain">
+                <ul class="navbar-nav">
+                    <li th:replace="~{fragments :: nav_item('', 'Home', ${fieldActive})}"></li>
+                    <li th:replace="~{fragments :: nav_item('users', 'Users', ${fieldActive})}"></li>
+                    <li th:replace="~{fragments :: nav_item('categories', 'Categories', ${fieldActive})}"></li>
+                    <li th:replace="~{fragments :: nav_item('brands', 'Brans', ${fieldActive})}"></li>
+                    <li th:replace="~{fragments :: nav_item('products', 'Products', ${fieldActive})}"></li>
+                    <li th:replace="~{fragments :: nav_item('customers', 'Customers', ${fieldActive})}"></li>
+                    <li th:replace="~{fragments :: nav_item('shipping', 'Shipping', ${fieldActive})}"></li>
+                    <li th:replace="~{fragments :: nav_item('orders', 'Orders', ${fieldActive})}"></li>
+                    <li th:replace="~{fragments :: nav_item('report', 'Sale Report', ${fieldActive})}"></li>
+                    <li th:replace="~{fragments :: nav_item('articles', 'Articles', ${fieldActive})}"></li>
+                    <li th:replace="~{fragments :: nav_item('menus', 'Menus', ${fieldActive})}"></li>
+                    <li th:replace="~{fragments :: nav_item('settings', 'Settings', ${fieldActive})}"></li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-bs-toggle='dropdown' style="cursor: pointer">
+                            <span class="fas fa-user me-2"></span><span sec:authentication="principal.fullName"></span>
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="" id="logoutBtn">Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <form id="logoutForm" th:hidden="true" method="POST" th:action="@{/logout}" name="logout">
+        <input type="submit">
+    </form>
+</div>
+
+<div th:fragment="popup" class="modal" id="modalDialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalTitle"></h4>
+                <button class="btn btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p id="modalBody"></p>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-danger" id="continueModalBtn">Continue</a>
+                <a class="btn btn-dark" id="cancelModalBtn" data-bs-dismiss="modal">Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrunk-to-fit=no">
+    <meta charset="UTF-8">
+    <link type="text/css" th:href="@{webjars/bootstrap/5.2.3/css/bootstrap.min.css}" rel="stylesheet" >
+    <title>Shopme - Login</title>
+</head>
+<body>
+<div class="container-fluid text-center" >
+    <img class="mt-5" th:src="@{images/logo-no-background.png}" style="width: 30%; max-width: 250px">
+
+    <div th:if="${param.error}" class="alert alert-danger my-2 mx-auto text-center" style="max-width: 300px">
+        <p class="m-0">[[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]</p>
+    </div>
+
+    <div th:if="${param.logout}" class="alert alert-info my-2 mx-auto text-center" style="max-width: 300px">
+        <p class="m-0">You have been logged out</p>
+    </div>
+
+    <form class="form" th:action="@{/authenticateTheUser}" method="POST">
+        <div style="max-width: 350px" class="border border-secondary rounded p-3 my-4 mx-auto">
+            <div class="mb-3">Please login to access</div>
+            <input name="username" class="form-control" type="email" placeholder="E-mail" required minlength="8" maxlength="128">
+            <input name="password" class="form-control my-3" type="password" placeholder="Password" required minlength="8" maxlength="20">
+            <input type="submit" class="btn btn-primary" value="Login">
+        </div>
+    </form>
+
+
+    <div>
+        <p>Shopme - Copyright &copy; Shopme</p>
+    </div>
+</div>
+
+</body>
+</html>
