@@ -2,7 +2,6 @@ package com.shopme.admin.user;
 
 import com.shopme.common.entity.Role;
 import com.shopme.common.entity.User;
-import jakarta.persistence.Table;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,6 +35,10 @@ public class UserService {
         } catch (NoSuchElementException e) {
             throw new UserNotFoundException("Could not find any user with ID " + id);
         }
+    }
+
+    public User getByEmail(String email) {
+        return repo.findUserByEmail(email);
     }
     public List<User> listAll() {
         return repo.findAll();

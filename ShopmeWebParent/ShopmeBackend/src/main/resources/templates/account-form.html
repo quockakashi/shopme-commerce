@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace="~{fragments :: header('Your Detail Accout')}">
+</head>
+<body>
+<div class="container-fluid">
+  <div th:replace="~{navigation :: menu('users')}"></div>
+  <div th:replace="~{navigation :: popup}"></div>
+  <div class="mt-2 mb-5">
+    <h1>Manage Users | [[${title}]]</h1>
+  </div>
+
+  <div class="mx-auto border border-secondary rounded p-3" style="max-width: 550px">
+    <form th:action="@{'/account/update' + ${user.photo == null ? '' : '?photo=' + user.photo}}" method="post" th:object="${user}" enctype="multipart/form-data">
+      <div th:if="${message} != null" th:class="${isSuccess == true ? 'aleart-success alert alert-success text-center' : 'alert-danger alert alert-success text-center'}">
+        [[${message}]]
+      </div>
+      <input id="idUser" type="hidden" th:field="*{id}">
+      <div class="form-group row mb-3">
+        <label for="emailInput" class="col-md-2 col-form-label">E-mail</label>
+        <div class="col-md-10">
+          <input type="email" id="emailInput" class="form-control" th:field="*{email}" readonly>
+        </div>
+      </div>
+      <div class="form-group row mb-3">
+        <div class="col-md-6 row">
+          <label class="col-md-5 col-form-label">First Name</label>
+          <div class="col-md-7">
+            <input type="text" class="form-control" th:field="*{firstName}" required minlength="2" maxlength="45">
+          </div>
+        </div>
+        <div class="col-md-6 row">
+          <label class="col-md-5 col-form-label">Last Name</label>
+          <div class="col-md-7">
+            <input type="text" class="form-control" th:field="*{lastName}" required minlength="2" maxlength="45">
+          </div>
+        </div>
+      </div>
+      <div class="form-group row mb-3">
+        <label class="col-md-2 col-form-label">Password</label>
+        <div class="col-md-10">
+          <input th:if="${user.password == null}" type="password" class="form-control" th:field="*{password}" required minlength="8" maxlength="20">
+          <input th:if="${user.password != null}" type="password" class="form-control" th:field="*{password}" minlength="8" maxlength="20" placeholder="Leaving blank if you don't want to edit the password.">
+        </div>
+      </div>
+
+      <div class="form-group row mb-3">
+        <label class="col-md-2 col-form-label">Password</label>
+        <div class="col-md-10">
+          <input type="password" class="form-control" name="confirmPassword" oninput="checkMatchingPassword(this)" minlength="8" maxlength="20">
+        </div>
+      </div>
+
+      <div class="form-group row mb-3">
+        <label class="col-2 col-form-label">Assigment Roles</label>
+        <span class="col-10" style="padding: 7px">[[${user.roles}]]</span>
+      </div>
+
+      <div class="form-group row mb-3 align-items-center">
+        <label for="enabledInput" class="col-2 col-form-label">Enabled</label>
+        <div class="col-10">
+          <input id=enabledInput type="checkbox" class="group-control" th:field="*{enabled}">
+        </div>
+      </div>
+
+      <div class="form-group row mb-3 align-items-center">
+        <label for="formImage" class="col-form-label col-2">Photo</label>
+        <div class="col-10 row">
+          <div class="col-8 row align-items-center">
+            <input name="image" type="file"  id="formImage" class="form-control my-auto" accept="image/png, image/jpeg">
+          </div>
+          <img class="col-2" th:src="@{${user.photosImagePath}}" id="thumbnail" alt="Photos preview" style="width: 150px; height: 150px">
+        </div>
+      </div>
+
+      <div class="text-center">
+        <input type="submit" value="Save" class="btn btn-primary mx-2">
+        <input type="button" value="Cancel" class="btn btn-danger" id="cancelBtn">
+      </div>
+    </form>
+  </div>
+
+  <div class="modal" id="modalDialog2">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="modalTitle2">Warning</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal">
+          </button>
+        </div>
+        <div class="modal-body">
+          <p id="modalBody2"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div th:replace="~{fragments :: footer}"></div>
+
+</div>
+</body>
+<script type="text/javascript">
+  $(document).ready(function () {
+    $("#cancelBtn").on("click", function () {
+      window.location = "[[@{/users}]]";
+    });
+
+    $("#formImage").change(function () {
+      if(this.files[0].size > 1024 * 1024) {
+        this.setCustomValidity("The image must less than 1MB!");
+        this.reportValidity();
+      } else {
+        this.setCustomValidity("");
+        showImageThumbnail(this);
+      }
+    })
+  });
+
+  function checkMatchingPassword(input) {
+    if(input.value != $("#password").val()) {
+      input.setCustomValidity("Password do not match!")
+    } else {
+      input.setCustomValidity("")
+    }
+  }
+
+  function showImageThumbnail(fileInput) {
+    let file = fileInput.files[0];
+    let reader = new FileReader();
+    reader.onload = function (e) {
+      $("#thumbnail").attr("src", e.target.result);
+    }
+
+    reader.readAsDataURL(file);
+  }
+
+
+</script>
+</html>

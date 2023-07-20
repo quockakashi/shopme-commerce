@@ -1,4 +1,4 @@
-package com.shopme.admin.user;
+package com.shopme.admin.export;
 
 import com.shopme.common.entity.User;
 import jakarta.servlet.http.HttpServletResponse;
@@ -7,7 +7,7 @@ import org.apache.poi.xssf.usermodel.*;
 import java.io.IOException;
 import java.util.List;
 
-public class UserExcelExporter extends UserExporterAbstract{
+public class UserExcelExporter extends UserExporterAbstract {
     private XSSFWorkbook workbook;
 
     public UserExcelExporter() {

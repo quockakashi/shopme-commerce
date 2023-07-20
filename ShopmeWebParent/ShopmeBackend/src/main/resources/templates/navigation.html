@@ -34,7 +34,7 @@
                     <li th:replace="~{fragments :: nav_item('settings', 'Settings', ${fieldActive})}"></li>
 
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-bs-toggle='dropdown' style="cursor: pointer">
+                        <a class="nav-link dropdown-toggle" th:href="@{/account}" data-bs-toggle='dropdown' style="cursor: pointer">
                             <span class="fas fa-user me-2"></span><span sec:authentication="principal.fullName"></span>
                         </a>
                         <div class="dropdown-menu">
