@@ -21,17 +21,33 @@
             <div class="collapse navbar-collapse ms-2 ms-lg-0" id="navbarMain">
                 <ul class="navbar-nav">
                     <li th:replace="~{fragments :: nav_item('', 'Home', ${fieldActive})}"></li>
-                    <li th:replace="~{fragments :: nav_item('users', 'Users', ${fieldActive})}"></li>
-                    <li th:replace="~{fragments :: nav_item('categories', 'Categories', ${fieldActive})}"></li>
-                    <li th:replace="~{fragments :: nav_item('brands', 'Brans', ${fieldActive})}"></li>
+                    <li th:replace="~{fragments :: nav_item('users', 'Users', ${fieldActive})}"  sec:authorize="hasAuthority('Admin')"></li>
+                    <th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
+                        <li th:replace="~{fragments :: nav_item('categories', 'Categories', ${fieldActive})}"></li>
+                        <li th:replace="~{fragments :: nav_item('brands', 'Brans', ${fieldActive})}"></li>
+                    </th:block>
+                    <th:block sec:authorize="hasAnyAuthority('Admin', 'Saleperson', 'Editor', 'Shipper')">
                     <li th:replace="~{fragments :: nav_item('products', 'Products', ${fieldActive})}"></li>
+                    </th:block>
+                    <th:block sec:authorize="hasAnyAuthority('Admin', 'Assistant')">
+                        <li th:replace="~{fragments :: nav_item('questions', 'Questions', ${fieldActive})}"></li>
+                        <li th:replace="~{fragments :: nav_item('reviews', 'Reviews', ${fieldActive})}"></li>
+                    </th:block>
+                    <th:block sec:authorize="hasAnyAuthority('Admin', 'Saleperson')">
                     <li th:replace="~{fragments :: nav_item('customers', 'Customers', ${fieldActive})}"></li>
                     <li th:replace="~{fragments :: nav_item('shipping', 'Shipping', ${fieldActive})}"></li>
-                    <li th:replace="~{fragments :: nav_item('orders', 'Orders', ${fieldActive})}"></li>
-                    <li th:replace="~{fragments :: nav_item('report', 'Sale Report', ${fieldActive})}"></li>
-                    <li th:replace="~{fragments :: nav_item('articles', 'Articles', ${fieldActive})}"></li>
-                    <li th:replace="~{fragments :: nav_item('menus', 'Menus', ${fieldActive})}"></li>
-                    <li th:replace="~{fragments :: nav_item('settings', 'Settings', ${fieldActive})}"></li>
+                    </th:block>
+                    <th:block sec:authorize="hasAnyAuthority('Admin', 'Saleperson', 'Shipper')">
+                        <li th:replace="~{fragments :: nav_item('orders', 'Orders', ${fieldActive})}"></li>
+                    </th:block>
+                    <th:block sec:authorize="hasAnyAuthority('Admin', 'Saleperson')">
+                        <li th:replace="~{fragments :: nav_item('report', 'Sale Report', ${fieldActive})}"></li>
+                    </th:block>
+                    <th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
+                        <li th:replace="~{fragments :: nav_item('articles', 'Articles', ${fieldActive})}"></li>
+                        <li th:replace="~{fragments :: nav_item('menus', 'Menus', ${fieldActive})}"></li>
+                    </th:block>
+                        <li sec:authorize="hasAuthority('Settings')" th:replace="~{fragments :: nav_item('settings', 'Settings', ${fieldActive})}"></li>
 
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" th:href="@{/account}" data-bs-toggle='dropdown' style="cursor: pointer">

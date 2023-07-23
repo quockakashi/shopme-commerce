@@ -13,7 +13,8 @@
 
   <div class="mx-auto border border-secondary rounded p-3" style="max-width: 550px">
     <form th:action="@{'/users/save' + ${user.photo == null ? '' : '?photo=' + user.photo}}" method="post" th:object="${user}" onsubmit="return checkEmailUnique(this)" enctype="multipart/form-data">
-      <input id="idUser" type="hidden" th:field="*{id}">   <div class="form-group row mb-3">
+      <input id="idUser" type="hidden" th:field="*{id}">
+      <div class="form-group row mb-3">
         <label for="emailInput" class="col-md-2 col-form-label">E-mail</label>
         <div class="col-md-10">
           <input type="email" id="emailInput" class="form-control" th:field="*{email}" required minlength="8" maxlength="128">

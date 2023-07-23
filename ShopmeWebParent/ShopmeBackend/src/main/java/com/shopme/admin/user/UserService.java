@@ -93,11 +93,11 @@ public class UserService {
         }
     }
 
-    void deleteUser(Integer id) {
+    public void deleteUser(Integer id) {
         repo.deleteById(id);
     }
 
-    void updateEnabledStatus(Integer id, boolean enabled) {
+    public void updateEnabledStatus(Integer id, boolean enabled) {
         repo.updateEnabledStatus(id, enabled);
     }
 }
