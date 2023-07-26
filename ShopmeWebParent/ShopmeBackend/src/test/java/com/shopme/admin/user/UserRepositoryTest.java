@@ -107,6 +107,14 @@ public class UserRepositoryTest {
         assertThat(users.size()).isGreaterThan(0);
     }
 
+    @Test
+    public void createNewUser() {
+        User user = new User();
+        System.out.println(user);
+
+        assertThat(user).isNotNull();
+    }
+
 }
 
 
