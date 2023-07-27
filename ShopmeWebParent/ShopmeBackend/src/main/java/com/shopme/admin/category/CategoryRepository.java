@@ -14,4 +14,7 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
             "FROM  Category c " +
             "WHERE CONCAT(c.id, ' ', c.name, ' ', c.alias) LIKE %?1%")
     public Page<Category> findAll(String keyword, Pageable pageable);
+
+    public Category findCategoryByAlias(String alias);
+    public Category findCategoryByName(String name);
 }

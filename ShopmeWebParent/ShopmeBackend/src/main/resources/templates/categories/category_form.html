@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: header(${title})}">
+</head>
+<body>
+<div class="container-fluid">
+  <div th:replace="~{navigation :: menu('categories')}"></div>
+  <div th:replace="~{navigation :: popup}"></div>
+  <div class="mt-2 mb-5">
+    <h1>Manage Categories | [[${title}]]</h1>
+  </div>
+
+  <div class="mx-auto border border-secondary rounded p-3" style="max-width: 550px">
+    <form id="formInput" th:action="@{/categories/save}" method="post" th:object="${category}" onsubmit="return checkNameAndAliasUnique(this)" enctype="multipart/form-data">
+      <input id="idCategory" type="hidden" th:field="*{id}">
+      <input type="hidden" th:field="*{image}">
+      <div class="form-group row mb-3">
+        <label class="col-md-4 col-form-label">Name</label>
+        <div class="col-md-8">
+          <input type="text" class="form-control" th:field="*{name}" required minlength="2" maxlength="60">
+        </div>
+      </div>
+      <div class="form-group row mb-3">
+        <label class="col-md-4 col-form-label">Alias</label>
+        <div class="col-md-8">
+          <input type="text"  class="form-control" th:field="*{alias}" required minlength="2" maxlength="60">
+        </div>
+      </div>
+      <div class="form-group row mb-3">
+        <label class="col-md-4 col-form-label">Parent category</label>
+        <div class="col-md-6">
+          <select class="form-select" th:field="*{parent}">
+            <option   th:value="${null}">No parent</option>
+            <th:block th:each="parent : ${listParents}">
+              <option th:value="${parent.value}" th:text="${parent.key}"></option>
+            </th:block>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group row mb-3 align-items-center">
+        <label for="enabledInput" class="col-4 col-form-label">Enabled</label>
+        <div class="col-8">
+          <input id=enabledInput type="checkbox" class="group-control" th:field="*{enabled}">
+        </div>
+      </div>
+
+      <div class="form-group row mb-3 align-items-center">
+        <label for="formImage" class="col-form-label col-2">Photo</label>
+        <div class="col-10 row">
+          <div class="col-8 row align-items-center">
+            <input name="image_input" type="file"  id="formImage" class="form-control my-auto" accept="image/png, image/jpeg">
+          </div>
+          <img class="col-2" th:src="@{${category.imagePath}}" id="thumbnail" alt="Photos preview" style="width: 150px; height: 150px">
+        </div>
+      </div>
+
+      <div class="text-center">
+        <input type="submit" value="Save" class="btn btn-primary mx-2">
+        <input type="button" value="Cancel" class="btn btn-danger" id="cancelBtn">
+      </div>
+    </form>
+  </div>
+
+  <div class="modal" id="modalDialog2">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="modalTitle2">Warning</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal">
+          </button>
+        </div>
+        <div class="modal-body">
+          <p id="modalBody2"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div th:replace="~{fragments :: footer}"></div>
+
+</div>
+</body>
+<script type="text/javascript">
+  $(document).ready(function () {
+    $("#cancelBtn").on("click", function () {
+      window.location = "[[@{/categories}]]";
+    });
+
+    $("#formImage").change(function () {
+      if(this.files[0].size > 1024 * 1024) {
+        this.setCustomValidity("The image must less than 1MB!");
+        this.reportValidity();
+      } else {
+        this.setCustomValidity("");
+        showImageThumbnail(this);
+      }
+    })
+  });
+
+  function showImageThumbnail(fileInput) {
+    let file = fileInput.files[0];
+    let reader = new FileReader();
+    reader.onload = function (e) {
+      $("#thumbnail").attr("src", e.target.result);
+    }
+
+    reader.readAsDataURL(file);
+  }
+  function checkNameAndAliasUnique(form) {
+    url = "[[@{/categories/check_name_alias_unique}]]";
+    id = $("#idCategory").val()
+    nameCategory =$("#name").val();
+    alias = $("#alias").val();
+    csrf = $("input[name='_csrf']").val();
+    params = {id: id, name: nameCategory, alias: alias, _csrf: csrf};
+
+
+
+    $.post(url, params, function (response) {
+      if (response == "OK") {
+        form.submit();
+      } else if(response == "Duplicated Name") {
+        showModalDialog("Warning", "This name was used by another category. Try again!");
+      } else if(response == "Duplicated Alias") {
+        showModalDialog("Warning", "This alias was used by another category. Try again!");
+      } else {
+        showModalDialog("Error", "Unknown response from server")
+      }
+    }).fail(function () {
+      showModalDialog("Error", "Could not connect to the server")
+    });
+    return false;
+  }
+
+  function showModalDialog(title, body) {
+    $("#modalTitle2").text(title);
+    $("#modalBody2").text(body);
+    $("#modalDialog2").modal("show")
+  }
+
+
+</script>
+</html>

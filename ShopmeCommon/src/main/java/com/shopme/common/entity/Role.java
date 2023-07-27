@@ -2,7 +2,6 @@ package com.shopme.common.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.context.annotation.Primary;
 
 @Data
 @Entity

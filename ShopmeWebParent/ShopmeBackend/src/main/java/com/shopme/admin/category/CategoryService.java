@@ -47,4 +47,36 @@ public class CategoryService {
     public Category save(Category category) {
         return repo.save(category);
     }
+
+    public List<Category> findAll() {
+        return repo.findAll();
+    }
+
+    int checkNameAndaAliasUnique(Integer id, String name, String alias) throws CategoryNotFoundException {
+        if(id != null) {
+            var category = repo.findById(id).get();
+            if(category.getName().equals(name) && category.getAlias().equals(alias))
+                return 1;
+            else if(category.getName().equals(name)) {
+                if(repo.findCategoryByAlias(alias) != null)
+                    return -1;
+                else return 1;
+            } else if(category.getName().equals(alias)) {
+                if(repo.findCategoryByName(name) != null)
+                    return 0;
+                else return 1;
+            }
+        }
+
+        if(repo.findCategoryByName(name) != null)
+            return 0;
+        else if(repo.findCategoryByAlias(alias) != null)
+            return -1;
+
+        return 1;
+    }
+
+    public void delete(Category category) {
+        repo.delete(category);
+    }
 }

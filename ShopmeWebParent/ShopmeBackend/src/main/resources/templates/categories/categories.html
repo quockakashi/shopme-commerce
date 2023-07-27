@@ -75,7 +75,8 @@
                 </td>
                 <td>
                     <a class="me-auto" th:href="@{'/categories/edit/' + ${category.id}}"><span class="fas fa-pen fa-2x text-info"></span></a>
-                    <a th:href="@{'/categories/delete/' + ${category.id}}" class="delete-link" th:categoryId="${category.id}" th:userName="${category.name}"><span class="fas fa-trash fa-2x text-danger"></span></a>
+                    <a th:href="@{${'/categories/delete/' + category.id + '?pageNum=' + currentPage +  '&sortField=' + sortField + '&sortDir=' + sortDir + (keyword != null ? '&keyword=' + keyword : '')}}"
+                       class="delete-link" th:categoryId="${category.id}" th:categoryName="${category.name}"><span class="fas fa-trash fa-2x text-danger"></span></a>
                 </td>
 
             </tr>
@@ -111,9 +112,9 @@
     $(document).ready(function () {
         $(".delete-link").on("click", function (e) {
             e.preventDefault();
-            userName = $(this).attr("userName");
-            userId = $(this).attr("userId");
-            body = "Do you really want to delete user id " + userId + ": " + userName
+            categoryName = $(this).attr("categoryName");
+            categoryId = $(this).attr("categoryId");
+            body = "Do you really want to delete user id " +categoryId + ": " + categoryName
             showModalDialog("Deleting Confirm", body);
             $("#continueModalBtn").attr("href", $(this).attr("href"));
         })

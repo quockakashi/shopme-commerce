@@ -13,13 +13,21 @@ public class McvConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        String dirName = "user-photos";
-        Path userPhotoDir = Paths.get(dirName);
+        String dirNamePhotoUser = "user-photos";
+        Path userPhotoDir = Paths.get(dirNamePhotoUser);
 
 
         String userPhotosPath = userPhotoDir.toFile().getAbsolutePath();
 
-        registry.addResourceHandler("/" + dirName + "/**")
+        registry.addResourceHandler("/" + dirNamePhotoUser + "/**")
                 .addResourceLocations("file:/" + userPhotosPath + "/");
+
+        String dirNameCategoriesImages = "category_photos";
+        Path categoryPhotosDir = Paths.get(dirNameCategoriesImages);
+
+        String categoryPhotosPath = categoryPhotosDir.toFile().getAbsolutePath();
+
+        registry.addResourceHandler("/category_photos" + "/**")
+                .addResourceLocations("file:/" + categoryPhotosPath + "/");
     }
 }

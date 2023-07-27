@@ -1,15 +1,14 @@
 package com.shopme.common.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -36,7 +35,7 @@ public class Category {
     private Category parent;
 
     @OneToMany(mappedBy = "parent")
-    private Set<Category> child = new HashSet<>();
+    private Set<Category> children = new HashSet<>();
 
     public Category(Integer id) {
         this.id = id;
@@ -53,12 +52,33 @@ public class Category {
         this.parent = parent;
     }
 
+    public void addChild(Category child) {
+        this.children.add(child);
+    }
+
     @Transient
     public String getImagePath() {
         if(id == null || image == null || image.equals("")) {
             return "/images/default_item.png";
         } else
             return "/category_photos/" + id + "/" + image;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Category category = (Category) o;
+        return category.id == id;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 31 * hash + (int) id;
+        hash = 31 * hash + (name == null ? 0 : name.hashCode());
+        hash = 31 * hash + (alias == null ? 0 : alias.hashCode());
+        return hash;
     }
 
     @Override

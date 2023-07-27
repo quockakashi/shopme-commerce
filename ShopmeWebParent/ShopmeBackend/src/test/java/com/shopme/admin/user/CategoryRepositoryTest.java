@@ -1,9 +1,12 @@
 package com.shopme.admin.user;
 
+import com.mysql.cj.log.LogFactory;
 import com.shopme.admin.category.CategoryRepository;
 import com.shopme.common.entity.Category;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -43,5 +46,13 @@ public class CategoryRepositoryTest {
 
         var list = repo.saveAll(List.of(desktops, laptops, components, memory, cameras, smartphones));
         assertThat(list.size()).isEqualTo(6);
+    }
+
+    @Test
+    public void getChildCategories() {
+        var category = repo.findById(1).get();
+        System.out.println(category);
+        System.out.println(category.getChildren());
+
     }
 }
