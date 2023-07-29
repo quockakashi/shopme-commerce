@@ -29,5 +29,13 @@ public class McvConfig implements WebMvcConfigurer {
 
         registry.addResourceHandler("/category_photos" + "/**")
                 .addResourceLocations("file:/" + categoryPhotosPath + "/");
+
+        String brandPhotosDirName = "brand_logos";
+        Path brandPhotosDir = Paths.get(brandPhotosDirName);
+
+        String brandPhotosPath = brandPhotosDir.toFile().getAbsolutePath();
+
+        registry.addResourceHandler("/" + brandPhotosDirName + "/**")
+                .addResourceLocations("file:/" + brandPhotosPath + "/");
     }
 }

@@ -3,7 +3,6 @@ package com.shopme.admin.category;
 import com.shopme.admin.FileUploadUtil;
 import com.shopme.common.entity.Category;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -18,7 +17,6 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Controller
 public class CategoryController {
@@ -96,40 +94,14 @@ public class CategoryController {
         Category category = new Category();
         category.setEnabled(true);
 
-        Map<String, Integer> listParents = getListParent();
+        Map<String, Integer> listParents = service.getListParent();
 
         model.addAttribute("category", category);
-        model.addAttribute("title", "Shopme - Create new category");
+        model.addAttribute("title", "Create new category");
         model.addAttribute("listParents", listParents);
         return "categories/category_form";
     }
 
-    private Map<String, Integer> getListParent() {
-        List<Category> list = service.findAll();
-
-        Map<String, Integer> listParents = new LinkedHashMap<>();
-        for(var item : list) {
-            if(item.getParent() == null) { // start from roots
-                listParents.put(item.getName(), item.getId());
-                travelChildCategory(0, listParents, item);
-            }
-        }
-
-        return listParents;
-    }
-
-    private void travelChildCategory(int level, Map<String, Integer> listParents, Category parent) {
-        level = level + 1;
-        for(var child : parent.getChildren()) {
-            StringBuilder name = new StringBuilder(child.getName());
-            for(int i = 0; i < level; i++) {
-                name.insert(0, "--");
-            }
-            listParents.put(name.toString(), child.getId());
-            travelChildCategory(level, listParents, child);
-        }
-
-    }
 
     @PostMapping("/categories/save")
     public String saveCategory(Category category, @RequestParam("image_input") MultipartFile file, RedirectAttributes redirectAttributes) throws IOException {
@@ -172,9 +144,10 @@ public class CategoryController {
         try {
             var category = service.findCategoryById(id);
 
-            Map<String, Integer> listParents = getListParent();
+            Map<String, Integer> listParents = service.getListParent();
             model.addAttribute("category", category);
             model.addAttribute("listParents", listParents);
+            model.addAttribute("title", "Edit Category");
 
 
         } catch (CategoryNotFoundException e) {

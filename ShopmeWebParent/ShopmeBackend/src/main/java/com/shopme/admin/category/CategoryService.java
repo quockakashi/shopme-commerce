@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 public class CategoryService {
@@ -78,5 +78,45 @@ public class CategoryService {
 
     public void delete(Category category) {
         repo.delete(category);
+    }
+
+    public Map<String, Integer> getListParent() {
+        List<Category> list = repo.findRootCategories(Sort.by("name").ascending());
+
+        Map<String, Integer> listParents = new LinkedHashMap<>();
+        for(var item : list) {
+            if(item.getParent() == null) { // start from roots
+                listParents.put(item.getName(), item.getId());
+                travelChildCategories(0, listParents, item);
+            }
+        }
+
+        return listParents;
+    }
+
+    private void travelChildCategories(int level, Map<String, Integer> listParents, Category parent) {
+        level = level + 1;
+        for(var child : sortSubCategories(parent.getChildren())) {
+            StringBuilder name = new StringBuilder(child.getName());
+            for(int i = 0; i < level; i++) {
+                name.insert(0, "--");
+            }
+            listParents.put(name.toString(), child.getId());
+            travelChildCategories(level, listParents, child);
+        }
+
+    }
+
+    private SortedSet<Category> sortSubCategories(Set<Category> children) {
+        SortedSet<Category> sortedSet = new TreeSet<Category>(new Comparator<Category>() {
+            @Override
+            public int compare(Category o1, Category o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
+
+        sortedSet.addAll(children);
+
+        return sortedSet;
     }
 }

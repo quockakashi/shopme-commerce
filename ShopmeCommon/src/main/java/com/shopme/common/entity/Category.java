@@ -27,7 +27,6 @@ public class Category {
     @Column(length = 128)
     private String image;
 
-    @Column
     private boolean enabled;
 
     @ManyToOne
@@ -50,6 +49,12 @@ public class Category {
         this.name = name;
         this.alias = name;
         this.parent = parent;
+    }
+
+    public Category(Integer id, String name, String alias) {
+        this.id = id;
+        this.name = name;
+        this.alias = alias;
     }
 
     public void addChild(Category child) {
