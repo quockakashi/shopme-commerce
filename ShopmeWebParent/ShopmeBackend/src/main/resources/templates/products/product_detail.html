@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="content" th:remove="tag">
+  <div id="detailDiv">
+    <th:block th:each="detail, status : ${product.details}">
+      <div class="row" th:id="${'detailControl' + status.index}">
+        <div class="col-5">
+          <label class=col-form-label>Name</label>
+          <input name="nameInput" class="form-control" type="text" th:value="${detail.name}">
+          <input name="idDetail" type="hidden" th:value="${detail.id}">
+        </div>
+        <div class="col-5">
+          <label class=col-form-label>Value</label>
+          <input name="valueInput" class="form-control" type="text" th:value="${detail.value}">
+        </div>
+        <a class="fa-solid fa-eraser btn text-secondary float-end col-2 my-auto" name="btnRemoveDetail"></a>
+      </div>
+    </th:block>
+    <div class="row" th:id="${'detailControl' + #lists.size(product.details)}">
+      <div class="col-5">
+        <label class=col-form-label>Name</label>
+        <input name="nameInput" class="form-control" type="text">
+      </div>
+      <div class="col-5">
+        <label class=col-form-label>Value</label>
+        <input name="valueInput" class="form-control" type="text">
+      </div>
+    </div>
+  </div>
+  <a onclick="addDetailInput()" class="btn btn-primary mt-3">Add more detail</a>
+
+  <div class="text-center mt-3">
+    <input type="submit" value="Save" class="btn btn-primary mx-2">
+    <input type="button" value="Cancel" class="btn btn-danger" name="cancel">
+  </div>
+</div>
+
+</html>

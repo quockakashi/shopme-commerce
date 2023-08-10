@@ -1,12 +1,16 @@
 package com.shopme.admin.brand;
 
 import com.shopme.common.entity.Brand;
+import com.shopme.common.entity.Category;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -40,5 +44,14 @@ public class BrandService {
 
     public Brand save(Brand brand) {
         return repo.save(brand);
+    }
+
+    public List<Brand> listSortByName() {
+        return repo.findAll(Sort.by("name").ascending());
+    }
+
+    public Set<Category> listCategoriesByBrandId(Integer id) throws BrandNotFoundException {
+        var brand = findBrandById(id);
+        return brand.getCategories();
     }
 }

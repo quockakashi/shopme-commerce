@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="~{fragments :: header(${title + ' - Shopme'}, 'tag')}">
+    </head>
+    <link type="text/css" rel="stylesheet" th:href="@{/richtext/richtext.min.css}">
+    <script type="text/javascript" th:src="@{/richtext/jquery.richtext.min.js}"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <div th:replace="~{navigation :: menu('products')}"></div>
+    <div th:replace="~{navigation :: popup}"></div>
+    <div class="mt-2 mb-5">
+        <h1>Manage products | [[${title}]]</h1>
+    </div>
+
+    <div class="mx-auto border border-secondary rounded p-3" style="max-width:700px">
+        <form id="formInput" th:action="@{/products/save}" method="post" th:object="${product}" onsubmit="return checkProductUnique(this)"  enctype="multipart/form-data">
+            <input type="hidden" th:field="*{id}">
+            <input type="hidden" th:field="*{mainImage}">
+            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="overview-tab" data-bs-toggle="pill" data-bs-target="#pills-overview" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Overviews</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="description-tab" data-bs-toggle="pill" data-bs-target="#pills-description" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Descriptions</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="image-tab" data-bs-toggle="pill" data-bs-target="#pills-image" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Images</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="detail-tab" data-bs-toggle="pill" data-bs-target="#pills-detail" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Detail</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="shipping-tab" data-bs-toggle="pill" data-bs-target="#pills-shipping" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Shipping</button>
+                </li>
+            </ul>
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-overview" role="tabpanel" aria-labelledby="pills-home-tab">
+                    <div th:replace="~{products/product_overview::content}"></div>
+                </div>
+                <div class="tab-pane fade" id="pills-description" role="tabpanel" aria-labelledby="pills-profile-tab">
+                    <div th:replace="~{products/product_description::content}"></div>
+                </div>
+                <div class="tab-pane fade" id="pills-image" role="tabpanel" aria-labelledby="pills-contact-tab">
+                    <div th:replace="~{products/product_image::content}"></div>
+                </div>
+                <div class="tab-pane fade" id="pills-detail" role="tabpanel" aria-labelledby="pills-contact-tab">
+                    <div th:replace="~{products/product_detail::content}"></div>
+                </div>
+                <div class="tab-pane fade" id="pills-shipping" role="tabpanel" aria-labelledby="pills-contact-tab">
+                    <div th:replace="~{products/product_shipping::content}"></div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+    <div class="modal" id="modalDialog2">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalTitle2">Warning</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalBody2"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments :: footer}"></div>
+
+</div>
+</body>
+<script type="text/javascript">
+    var image_default = "[[@{/images/default_image.jpg}]]"
+    var numberExtraImages = "[[${numExtraImage}]]";
+    var numberDetails = "[[${product.details.size() + 1}]]"
+    $(document).ready(function () {
+        dropdownBrands = $("#brand");
+        dropdownCategories = $("#category")
+        showCategoryListForNewForm();
+
+        $("#shortDescription").richText()
+        $("#fullDescription").richText()
+
+        dropdownBrands.change(function () {
+            dropdownCategories.empty()
+            showCategoryList();
+        })
+
+
+        $("input[name=cancel]").each(function () {
+            $(this).on("click", function () {
+                window.location = "[[@{/products}]]"
+            })
+        })
+    });
+
+    function showCategoryListForNewForm() {
+        if($("#id").val() == "") {
+            showCategoryList();
+        }
+    }
+
+    function showCategoryList() {
+        dropdownBrands.children("option:selected").each(function () {
+            brandSelected = $(this)
+            params = {'brand-id': brandSelected.val()}
+            url = "[[@{/brands/categories-list}]]"
+            $.get(url, params, function (response) {
+                response.forEach(function (category) {
+                    dropdownCategories.append("<option value='" + category.id + "'>" + category.name + "</option>")
+                })
+            })
+        })
+    }
+
+    function checkProductUnique(form) {
+        name = $("#name").val()
+        id = $("#id").val()
+        alias = $("#alias").val()
+        if(alias == "")
+            alias = name;
+        alias.replaceAll(" ", "_")
+        csrf = $("input[name=_csrf]").val()
+        params = {id: id, name: name, alias: alias, _csrf: csrf}
+        url = "[[@{/products/}]]"
+        url += "check-unique"
+        $.post(url, params, function (response) {
+            if(response == 'OK')
+                form.submit()
+            else if(response == 'DuplicatedName')
+                showModalDialog("Warning", "This name was used by another product. Try again!")
+            else if(response == 'DuplicatedAlias')
+                showModalDialog("Warning", "This alias was used by another product. Try again!")
+            else
+                showModalDialog("Error", "Some unexpected errors was occurred. Try again!")
+        }).fail(
+            function () {
+                showModalDialog("Error", "Can't connect to the server");
+            }
+        )
+
+        return false;
+    }
+    function showModalDialog(title, body) {
+        $("#modalTitle2").text(title)
+        $("#modalBody2").text(body)
+        $("#modalDialog2").modal("show")
+    }
+
+</script>
+<script type="text/javascript" th:src="@{/js/product_image.js}"></script>
+<script type="text/javascript" th:src="@{/js/product_detail.js}"></script>
+</html>

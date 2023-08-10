@@ -1,4 +1,4 @@
-package com.shopme.admin.user;
+package com.shopme.admin.brand;
 
 import com.shopme.admin.brand.BrandRepository;
 import com.shopme.common.entity.Brand;

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+<div th:fragment="content" th:remove="tag">
+  <div class="form-group row mb-3">
+    <label class="col-md-2 col-form-label">Product Name</label>
+    <div class="col-md-10">
+      <input type="text" class="form-control" th:field="*{name}" required minlength="2" maxlength="60">
+    </div>
+  </div>
+  <div class="form-group row mb-3">
+    <label class="col-md-2 col-form-label">Alias</label>
+    <div class="col-md-10">
+      <input type="text" class="form-control" th:field="*{alias}" placeholder="Default is product name (spaces are replaced by dashed)" minlength="2" maxlength="60">
+    </div>
+  </div>
+  <div class="form-group row mb-3">
+    <label class="col-md-2 col-form-label">Brand</label>
+    <div class="col-md-6">
+      <select class="form-select" th:field="*{brand}">
+        <th:block th:each="brand : ${brands}">
+          <option th:value="${brand.id}" th:text="${brand.name}"></option>
+        </th:block>
+      </select>
+    </div>
+  </div>
+  <div class="form-group row mb-3">
+    <label class="col-md-2 col-form-label">Category</label>
+    <th:block th:if="${product.id == null}">
+      <div class="col-md-6">
+        <select class="form-select" th:field="*{category}">
+        </select>
+      </div>
+    </th:block>
+    <th:block th:if="${product.id != null}">
+      <div class="col-md-6">
+        <select class="form-select" th:field="*{category}">
+          <option th:each="category : ${product.brand.categories}" th:value="${category.id}">[[${category.name}]]</option>
+        </select>
+      </div>
+    </th:block>
+  </div>
+
+  <div class="form-group row mb-3 align-items-center">
+    <label class="col-2 col-form-label">Enabled</label>
+    <div class="col-8">
+      <input type="checkbox" th:field="*{enabled}">
+    </div>
+  </div>
+
+  <div class="form-group row mb-3 align-items-center">
+    <label class="col-2 col-form-label">In Stock</label>
+    <div class="col-8">
+      <input type="checkbox" th:field="*{inStock}">
+    </div>
+  </div>
+
+  <div class="form-group row mb-3 align-items-center">
+    <label class="col-md-2 col-form-label">Cost</label>
+    <div class="col-md-8">
+      <input type="number" th:field="*{cost}">
+    </div>
+  </div>
+
+  <div class="form-group row mb-3 align-items-center">
+    <label class="col-md-2 col-form-label">List Price</label>
+    <div class="col-md-8">
+      <input type="number" th:field="*{price}">
+    </div>
+  </div>
+
+  <div class="form-group row mb-3 align-items-center">
+    <label class="col-md-2 col-form-label">Discount Percent</label>
+    <div class="col-md-8">
+      <input type="number" th:field="*{discountPercent}">
+    </div>
+  </div>
+
+  <div class="text-center">
+    <input type="submit" value="Save" class="btn btn-primary mx-2">
+    <input type="button" name="cancel" value="Cancel" class="btn btn-danger">
+  </div>
+</div>
+</body>
+</html>

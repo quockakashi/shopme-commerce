@@ -1,6 +1,7 @@
 package com.shopme.admin.category;
 
 import com.shopme.common.entity.Category;
+import jakarta.persistence.Id;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -118,5 +119,18 @@ public class CategoryService {
         sortedSet.addAll(children);
 
         return sortedSet;
+    }
+
+    public SortedSet<CategoryDTO> listCategoriesDTO() {
+        SortedSet<CategoryDTO> categoryDTOS = new TreeSet<>(new Comparator<CategoryDTO>() {
+            @Override
+            public int compare(CategoryDTO o1, CategoryDTO o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
+
+        repo.findAll().forEach(category -> {categoryDTOS.add(new CategoryDTO(category));});
+
+        return categoryDTOS;
     }
 }

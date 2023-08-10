@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="content" class="p-3" th:remove="tag">
+  <div id="imagesDiv" class="row">
+    <div>
+      <div class="m-2 row">
+        <label class="col-form-label">Main Image</label>
+        <img id="mainImageThumbnail" th:src="@{${product.mainImagePath}}" class="img-fluid img-thumbnail" style="width: 350px; height: 200px; object-fit: contain">
+      </div>
+      <input name="mainImageFile" id="mainImageInput" type="file" class="form-control" accept="image/jpeg, image/png">
+    </div>
+
+    <th:block th:each="extraImage, status : ${product.images}">
+      <div th:id="${'extraImageDiv' + status.index}">
+        <div class="m-2 row mt-3">
+          <div th:id="${'headerExtra' + status.index}">
+            <label class="col-form-label">Extra Image#[[${status.index + 1}]]:</label>
+            <a name="btnRemoveExtra" class="fa-solid fa-remove text-dark float-end text-decoration-none btn"></a>
+          </div>
+          <img th:id="${'extraImageThumbnail' + status.index}" th:src="@{${extraImage.imagePath}}" class="img-fluid img-thumbnail" style="width: 350px; height: 200px; object-fit: contain">
+        </div>
+        <input name="extraImage" th:id="${'extraImage' + status.index}" type="file" class="form-control" accept="image/jpeg, image/png">
+        <input type="hidden" name="extraImageId" th:id="${'extraImageId' + status.index}" th:value="${extraImage.id}">
+        <input type="hidden" name="extraImageName" th:id="${'extraImageName' + status.index}" th:value="${extraImage.name}">
+      </div>
+
+    </th:block>
+
+
+    <div th:id="'extraImageDiv' + ${numExtraImage}">
+      <div class="m-2 row mt-3">
+        <div id="headerExtra0">
+          <label class="col-form-label">Extra Image#[[${numExtraImage + 1}]]:</label>
+        </div>
+        <img th:id="'extraImageThumbnail' + ${numExtraImage}" th:src="@{/images/default_image.jpg}" class="img-fluid img-thumbnail" style="width: 350px; height: 200px; object-fit: contain">
+      </div>
+      <input name="extraImage" th:id="'extraImage' + ${numExtraImage}" type="file" class="form-control" accept="image/jpeg, image/png">
+    </div>
+  </div>
+  <div class="text-center mt-3">
+    <input type="submit" value="Save" class="btn btn-primary mx-2">
+    <input type="button" value="Cancel" class="btn btn-danger" name="cancel">
+  </div>
+</div>
+</html>

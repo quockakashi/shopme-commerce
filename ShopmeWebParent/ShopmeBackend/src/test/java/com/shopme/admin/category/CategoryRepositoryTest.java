@@ -1,4 +1,4 @@
-package com.shopme.admin.user;
+package com.shopme.admin.category;
 
 import com.mysql.cj.log.LogFactory;
 import com.shopme.admin.category.CategoryRepository;

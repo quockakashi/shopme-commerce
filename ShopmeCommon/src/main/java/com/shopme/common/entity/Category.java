@@ -1,5 +1,6 @@
 package com.shopme.common.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,10 +31,14 @@ public class Category {
     private boolean enabled;
 
     @ManyToOne
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
     @JoinColumn(name="parent_id")
     private Category parent;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "parent")
+    @EqualsAndHashCode.Exclude
     private Set<Category> children = new HashSet<>();
 
     public Category(Integer id) {

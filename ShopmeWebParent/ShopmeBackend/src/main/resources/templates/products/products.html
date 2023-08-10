@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="~{fragments :: header(${title}, 'none')}"></head>
+</head>
+<body>
+<div class="container-fluid">
+
+    <div th:replace="~{navigation :: menu('products')}"></div>
+
+    <div class="mt-2 mb-3">
+        <h1>Manage products</h1>
+        <a class="btn btn-primary" th:href="@{/products/new}"><span class="btn-text">Create new product</span>  <span class="ms-1 fas fa-plus"></span></a>
+        <a class="mx-2 btn btn-success" th:href="@{/products/export/csv}"><span class="btn-text">Export to csv</span>  <span class="ms-1 fas fa-file-csv"></span></a>
+        <a class="btn btn-success mt-lg-0" th:href="@{/products/export/excel}"><span class="btn-text">Export to xlsx</span>  <span class="mx-1 fas fa-file-excel"></span></a>
+        <a class="btn btn-danger ms-2" th:href="@{/products/export/pdf}"><span class="btn-text">Export to pdf</span>  <span class="mx-1 fas fa-file-pdf"></span></a>
+    </div>
+
+    <div style="max-width: 500px">
+        <form th:action="@{/products/page/1}" class="m-3">
+            <div class="form-group row">
+                <input type="hidden" th:value="${sortField}" name="sortField">
+                <input type="hidden" th:value="${sortDir}" name="sortDir">
+                <div class="col-8 row mb-3">
+                    <label class="col-3 col-form-label m-0 p-0">Category: </label>
+                    <div class="col-9">
+                        <select class="form-select" aria-label="Default select example" name="categoryId">
+                            <option value="0">All categories</option>
+                            <th:block th:each="category : ${categories}">
+                                <option th:text="${category.name}" th:value="${category.id}" th:selected="${categoryId == category.id}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-8 p-0 row">
+                    <label class="col-form-label col-3">Keyword: </label>
+                    <div class="col-9">
+                        <input id="keyword" name="keyword" th:value="${keyword}" class="form-control" type="search" placeholder="Search!">
+                    </div>
+                </div>
+                <input type="submit" class="btn btn-primary col-2 mx-2" value="Search">
+                <button type="button" class="btn btn-warning col-2" id="clearBtn"><span class="fas fa-remove"></span></button>
+            </div>
+        </form>
+    </div>
+
+    <div th:if="${message} != null" th:class="${isSuccess == true ? 'aleart-success alert alert-success text-center' : 'alert-danger alert alert-success text-center'}">
+        [[${message}]]
+    </div>
+
+    <div class="less-details">
+        <div th:each="product : ${products}" class="row mb-5">
+            <div class="col-3 text-center">
+                <img th:src="@{${product.mainImagePath}}" style="width: 70px; height: 70px; border-radius: 50%">
+            </div>
+            <div class="col-8">
+                <div>[[${product.name}]]</div>
+                <div>[[${product.alias}]]</div>
+                <span class="badge bg-secondary me-1" th:text="${product.category.name}"></span>
+                <span class="badge bg-secondary me-1" th:text="${product.brand.name}"></span>
+                <div class="mt-3">
+                    <a><span class="fas fa-info-circle fa-2x"></span></a>
+                    <a class="mx-2" th:href="@{'/products/edit/' + ${product.id}}"><span class="fas fa-pen fa-2x text-info"></span></a>
+                    <a th:href="@{'/products/delete/' + ${product.id}}" class="delete-link" th:productId="${product.id}" th:productName="${product.name}"><span class="fas fa-trash fa-2x text-danger"></span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="full-details">
+        <table class="table table-hover table-bordered table-striped text-center">
+            <thead class="table-dark text-center">
+            <tr>
+                <th th:replace="~{fragments :: column_link('products', 'id', 'ID')}"></th>
+                <th scope="col">Image</th>
+                <th th:replace="~{fragments :: column_link('products', 'name', 'Product Name')}"></th>
+                <th th:replace="~{fragments :: column_link('products', 'alias', 'Alias')}"></th>
+                <th th:replace="~{fragments :: column_link('products', 'category', 'Category')}"></th>
+                <th th:replace="~{fragments :: column_link('products', 'brand', 'Brand')}"></th>
+                <th th:replace="~{fragments :: column_link('products', 'enabled', 'Enabled')}"></th>
+                <th scope="col">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="product : ${products}">
+                <th scope="row">[[${product.id}]]</th>
+                <td><img th:src="@{${product.mainImagePath}}" style="width: 100px; height: 100px; border-radius: 50%"></td>
+                <td>[[${product.name}]]</td>
+                <td>[[${product.alias}]]</td>
+                <td th:text="${product.category.name}"></td>
+                <td th:text="${product.brand.name}"></td>
+                <td>
+                    <a th:if="${product.enabled == false}" class="text-decoration-none" th:href="@{${'/products/' + product.id + '/enabled/true'}}"><span class="fa-solid fa-circle fa-2x text-secondary"></span></a>
+                    <a th:if="${product.enabled == true}" class="text-decoration-none" th:href="@{${'/products/' + product.id + '/enabled/false'}}"><span class="fa-solid fa-check-circle fa-2x text-success"></span></a>
+                </td>
+                <td>
+                    <a th:href="@{${'/products/details/' + product.id}}" class="btn-details"><span class="fa-solid fa-circle-info fa-2x"></span></a>
+                    <a class="mx-2" th:href="@{'/products/edit/' + ${product.id}}"><span class="fas fa-pen fa-2x text-info"></span></a>
+                    <a th:href="@{${'/products/delete/' + product.id + '?pageNum=' + currentPage +  '&sortField=' + sortField + '&sortDir=' + sortDir + (keyword != null ? '&keyword=' + keyword : '')}}"
+                       class="delete-link" th:productId="${product.id}" th:productName="${product.name}"><span class="fas fa-trash fa-2x text-danger"></span></a>
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="text-center m-1" th:if="${totalElements > 0}">
+        <span>Showing [[${numProducts}]] items of [[${totalElements}]]</span>
+    </div>
+
+    <div class="text-center m-1" th:if="${totalElements <= 0}">
+        <span>No products was found</span>
+    </div>
+
+    <div th:replace="~{navigation :: popup}"></div>
+    <div th:if="${totalPages > 1}">
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item" ><a th:href="@{${'/products/page/' + (pageNum - 1) + '?sortField=' + sortField + '&sortDir=' + sortDir + (keyword != null ? 'keyword=' + keyword : '')}}" class="page-link" th:classappend="${currentPage <= 1 ? 'pe-none text-secondary' : ''}">Previous</a></li>
+                <li th:each="i : ${#numbers.sequence(1, totalPages)}" class="page-item" th:classappend="${currentPage == i ? 'active' : ''}"><a th:href="@{${'/products/page/' + i + '?sortField=' + sortField + '&sortDir=' + sortDir + (keyword != null ? 'keyword=' + keyword : '')}}" class="page-link">[[${i}]]</a></li>
+                <li class="page-item" ><a th:href="@{${'/products/page/' + (pageNum + 1) + '?sortField=' + sortField + '&sortDir=' + sortDir + (keyword != null ? 'keyword=' + keyword : '')}}" class="page-link" th:classappend="${currentPage >= totalPages ? 'pe-none text-secondary' : ''}">Next</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div th:replace="~{products/modal_product_detail::modal}"></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+<script type="text/javascript" th:src="@{/js/modal_detail_product.js}"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+       // $("#modalDetail").modal("show");
+
+        $(".delete-link").on("click", function (e) {
+            e.preventDefault();
+            productName = $(this).attr("productName");
+            productId = $(this).attr("productId");
+            body = "Do you really want to delete user id " +productId + ": " + productName
+            showModalDialog("Deleting Confirm", body);
+            $("#continueModalBtn").attr("href", $(this).attr("href"));
+        })
+
+        $('#clearBtn').click(function () {
+            window.location = "[[@{/products}]]";
+        });
+    });
+</script>
+</body>
+</html>

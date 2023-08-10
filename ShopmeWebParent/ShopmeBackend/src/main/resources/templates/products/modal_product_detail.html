@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="modal" th:remove="tag">
+    <div class="modal" id="modalDetail">
+        <div class="modal-dialog" style="min-width: 700px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalTitle">Product Details</h4>
+                    <button class="btn btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div style="max-width: 700px">
+                        <form>
+                            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="display: flex; justify-content: space-between;">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="overview-tab" data-bs-toggle="pill" data-bs-target="#pills-overview" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Overviews</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="description-tab" data-bs-toggle="pill" data-bs-target="#pills-description" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Descriptions</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="image-tab" data-bs-toggle="pill" data-bs-target="#pills-image" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Images</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="detail-tab" data-bs-toggle="pill" data-bs-target="#pills-detail" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Detail</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="shipping-tab" data-bs-toggle="pill" data-bs-target="#pills-shipping" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Shipping</button>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="pills-tabContent">
+                                <div class="tab-pane fade show active" id="pills-overview" role="tabpanel">
+                                    <div style="display: flex; flex-direction: column; gap: 16px; align-content: center">
+                                        <div class="row">
+                                            <label for="nameDetail" class="col-form-label col-3">Name: </label>
+                                            <div class="col-8">
+                                                <input id="nameDetail" class="form-control" type="text" readonly value="Samsung Galaxy" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label for="nameDetail" class="col-form-label col-3">Alias: </label>
+                                            <div class="col-8">
+                                                <input id="aliasDetail" class="form-control" type="text" readonly value="Samsung Galaxy" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label for="brandDetail" class="col-form-label col-3">Brand: </label>
+                                            <div class="col-8">
+                                                <input id="brandDetail" class="form-control" type="text" readonly value="Samsung Galaxy" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label for="categoryDetail" class="col-form-label col-3">Category: </label>
+                                            <div class="col-8">
+                                                <input id="categoryDetail" class="form-control" type="text" readonly value="Samsung Galaxy" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label for="enabledDetail" class="col-form-label col-3">Enabled: </label>
+                                            <div class="col-8">
+                                                <input id="enabledDetail" type="checkbox" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label for="inStockDetail" class="col-form-label col-3">In stock: </label>
+                                            <div class="col-8">
+                                                <input id="inStockDetail" type="checkbox" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label for="costDetail" class="col-form-label col-3">Cost: </label>
+                                            <div class="col-8">
+                                                <input id="costDetail" class="form-control" type="text" readonly value="Samsung Galaxy" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label for="priceDetail" class="col-form-label col-3">Price: </label>
+                                            <div class="col-8">
+                                                <input id="priceDetail" class="form-control" type="text" readonly value="Samsung Galaxy" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label for="discountDetail" class="col-form-label col-3">Discount: </label>
+                                            <div class="col-8">
+                                                <input id="discountDetail" class="form-control" type="text" readonly value="Samsung Galaxy" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="align-items: center">
+                                            <label class="col-form-label col-3">Updated Time: </label>
+                                            <span class="col-8" id="updatedDetail">
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" role="tabpanel" id="pills-description">
+                                    <div style="display:flex; flex-direction: column; gap: 24px; padding: 24px">
+                                        <div>
+                                            <label class="mb-2">Short Description: </label>
+                                            <div id="shortDesDetail" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label  class="mb-2">Long Description: </label>
+                                            <div id="longDesDetail" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="pills-image">
+                                    <div id="imagesDetail" class="row" style="justify-content: center; gap: 24px">
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="pills-detail">
+                                    <table class="table" style="text-align: center">
+                                        <thead class="thead-dark">
+                                        <tr>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Detail</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="bodyDetails">
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="tab-pane fade" id="pills-shipping">
+                                    <div style="display: flex; flex-direction: column; gap: 24px">
+                                        <div class="row">
+                                            <label class="col-form-label col-3">Length (inch): </label>
+                                            <div class="col-9">
+                                                <input id="lengthDetail" class="form-control" type="text" value="1.0" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-form-label col-3">Width (inch): </label>
+                                            <div class="col-9">
+                                                <input id="widthDetail" class="form-control" type="text" value="1.0" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-form-label col-3">Height (inch): </label>
+                                            <div class="col-9">
+                                                <input id="heightDetail" class="form-control" type="text" value="1.0" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-form-label col-3">Weight (pound): </label>
+                                            <div class="col-9">
+                                                <input id="weightDetail" class="form-control" type="text" value="1.0" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-danger" id="cancelModalDetailBtn" data-bs-dismiss="modal">Close</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="~{fragments :: footer}"></div>
+</div>
+</html>

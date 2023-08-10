@@ -19,6 +19,7 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
     public Page<Category> findAll(String keyword, Pageable pageable);
 
     public Category findCategoryByAlias(String alias);
+
     public Category findCategoryByName(String name);
 
     @Query("SELECT c " +
